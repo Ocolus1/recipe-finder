@@ -1,3 +1,5 @@
+import { Recipe, SearchFilters, SearchResults } from "./types";
+
 const API_KEY = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
 const BASE_URL = 'https://api.spoonacular.com/recipes';
 

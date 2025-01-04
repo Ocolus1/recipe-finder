@@ -34,3 +34,11 @@ export interface SearchFilters {
   type?: string;
 
 }
+
+
+export interface SearchResults {
+	results: Recipe[];
+	offset: number;
+	number: number;
+	totalResults: number;
+}
