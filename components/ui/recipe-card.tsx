@@ -1,75 +1,73 @@
-'use client';
-
-import { Heart } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import { Heart } from 'lucide-react';
 import { Recipe } from '@/lib/types';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Button } from './button';
+import { Card, CardContent, CardFooter } from './card';
 
 interface RecipeCardProps {
-  recipe: Recipe;
-  onFavoriteToggle: (recipe: Recipe) => void;
-  isFavorited: boolean;
+	recipe: Recipe;
+	onFavoriteToggle: (recipe: Recipe) => void;
+	isFavorited: boolean;
 }
 
-export function RecipeCard({ recipe, onFavoriteToggle, isFavorited }: RecipeCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-		<Card
-			className="overflow-hidden transition-all duration-300 hover:shadow-lg"
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
-		>
+export function RecipeCard({
+	recipe,
+	onFavoriteToggle,
+	isFavorited,
+}: RecipeCardProps) {
+	return (
+		<Card className="overflow-hidden">
 			<Link href={`/recipes/${recipe.id}`}>
-				<CardHeader className="p-0 relative aspect-[4/3]">
+				<div className="relative aspect-[4/3]">
 					<Image
 						src={recipe.image}
 						alt={recipe.title}
 						fill
-						className={cn(
-							'object-cover transition-transform duration-300',
-							isHovered && 'scale-105'
-						)}
-						sizes="(max-width: 768px) 100vw, 33vw"
+						className="object-cover transition-transform hover:scale-105"
 					/>
-				</CardHeader>
-				<CardContent className="p-4">
-					<h3 className="font-semibold text-lg mb-2 line-clamp-2">
+				</div>
+			</Link>
+			<CardContent className="p-4">
+				<Link
+					href={`/recipes/${recipe.id}`}
+					className="hover:underline"
+				>
+					<h3 className="font-semibold text-lg line-clamp-2">
 						{recipe.title}
 					</h3>
-					<div className="flex flex-wrap gap-2 mb-2">
-						{recipe.cuisines?.slice(0, 2).map((cuisine) => (
-							<Badge key={cuisine} variant="secondary">
-								{cuisine}
-							</Badge>
-						))}
-					</div>
-					<div className="flex items-center gap-4 text-sm text-muted-foreground">
-						<span>{recipe.readyInMinutes} mins</span>
-						<span>{recipe.servings} servings</span>
-					</div>
-				</CardContent>
-			</Link>
-			<CardFooter className="p-4 pt-0">
+				</Link>
+				<div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
+					<span>{recipe.readyInMinutes} mins</span>
+					<span>{recipe.servings} servings</span>
+				</div>
+			</CardContent>
+			<CardFooter className="p-4 pt-0 flex justify-between items-center">
+				<div className="flex flex-wrap gap-2">
+					{recipe.diets?.slice(0, 2).map((diet) => (
+						<span
+							key={diet}
+							className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-xs"
+						>
+							{diet}
+						</span>
+					))}
+				</div>
 				<Button
 					variant="ghost"
 					size="icon"
-					className={cn(
-						'ml-auto transition-colors',
-						isFavorited && 'text-red-500 hover:text-red-600'
-					)}
-					onClick={() => onFavoriteToggle(recipe)}
+					onClick={(e) => {
+						e.preventDefault();
+						onFavoriteToggle(recipe);
+					}}
+					className={isFavorited ? 'text-red-500' : ''}
 				>
 					<Heart
-						className={cn('h-5 w-5', isFavorited && 'fill-current')}
+						className="h-5 w-5"
+						fill={isFavorited ? 'currentColor' : 'none'}
 					/>
 				</Button>
 			</CardFooter>
 		</Card>
-  );
+	);
 }

@@ -1,60 +1,62 @@
 'use client';
 
-import { Search } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import { useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+// import {
+// 	Select,
+// 	SelectContent,
+// 	SelectItem,
+// 	SelectTrigger,
+// 	SelectValue,
+// } from '@/components/ui/select';
 import { SearchFilters } from '@/lib/types';
 
 const cuisines = [
-  'Italian',
-  'Mexican',
-  'Chinese',
-  'Indian',
-  'Japanese',
-  'Thai',
-  'Mediterranean',
-  'French',
-  'Greek',
+	'Italian',
+	'Mexican',
+	'Chinese',
+	'Indian',
+	'Japanese',
+	'Thai',
+	'Mediterranean',
+	'French',
+	'Greek',
 ];
 
 const diets = [
-  'Vegetarian',
-  'Vegan',
-  'Gluten Free',
-  'Ketogenic',
-  'Paleo',
-  'Pescetarian',
+	'Vegetarian',
+	'Vegan',
+	'Gluten Free',
+	'Ketogenic',
+	'Paleo',
+	'Pescetarian',
 ];
 
 const mealTypes = [
-  'Main Course',
-  'Side Dish',
-  'Dessert',
-  'Appetizer',
-  'Salad',
-  'Soup',
-  'Breakfast',
-  'Snack',
+	'Main Course',
+	'Side Dish',
+	'Dessert',
+	'Appetizer',
+	'Salad',
+	'Soup',
+	'Breakfast',
+	'Snack',
 ];
 
 interface SearchFiltersProps {
-  filters: SearchFilters;
-  onFilterChange: (filters: SearchFilters) => void;
-  onSearch: () => void;
+	filters: SearchFilters;
+	onFilterChange: (filters: SearchFilters) => void;
+	onSearch: () => void;
+	loading?: boolean;
 }
 
 export function SearchFiltersComponent({
 	filters,
 	onFilterChange,
 	onSearch,
+	loading = false,
 }: SearchFiltersProps) {
 	const handleInputChange = useCallback(
 		(key: keyof SearchFilters, value: string) => {
@@ -74,10 +76,20 @@ export function SearchFiltersComponent({
 							handleInputChange('query', e.target.value)
 						}
 						className="pl-10"
+						disabled={loading}
 					/>
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 				</div>
-				<Button onClick={onSearch}>Search</Button>
+				<Button onClick={onSearch} disabled={loading}>
+					{loading ? (
+						<>
+							<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+							Searching...
+						</>
+					) : (
+						'Search'
+					)}
+				</Button>
 			</div>
 			{/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<Select
@@ -85,6 +97,7 @@ export function SearchFiltersComponent({
 					onValueChange={(value) =>
 						handleInputChange('cuisine', value)
 					}
+					disabled={loading}
 				>
 					<SelectTrigger>
 						<SelectValue placeholder="Cuisine" />
@@ -104,6 +117,7 @@ export function SearchFiltersComponent({
 				<Select
 					value={filters.diet}
 					onValueChange={(value) => handleInputChange('diet', value)}
+					disabled={loading}
 				>
 					<SelectTrigger>
 						<SelectValue placeholder="Diet" />
@@ -120,6 +134,7 @@ export function SearchFiltersComponent({
 				<Select
 					value={filters.type}
 					onValueChange={(value) => handleInputChange('type', value)}
+					disabled={loading}
 				>
 					<SelectTrigger>
 						<SelectValue placeholder="Meal Type" />
